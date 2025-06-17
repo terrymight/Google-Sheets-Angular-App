@@ -1,59 +1,37 @@
-# GoogleSheetsApp
+# Google Sheets Angular App
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.0.
+This Angular application allows users to read from and append data to a Google Sheet using the Google Sheets API and Google Identity Services (GIS) for authentication. The app uses RxJS Observables for asynchronous operations and provides a simple UI to view and add rows to a Google Sheet.
 
-## Development server
+## Features
+- Authenticate users with Google Identity Services (OAuth 2.0).
+- Read data from a specified Google Sheet range and display it in a table.
+- Append new rows to the Google Sheet without overwriting existing data.
+- Reactive UI with RxJS Observables for seamless data updates.
+- Error handling for authentication, API calls, and invalid inputs.
 
-To start a local development server, run:
+## Prerequisites
+Before setting up the application, ensure you have the following:
 
-```bash
-ng serve
-```
+1. **Node.js and npm**:
+   - Install Node.js (v18 or later recommended) and npm from [nodejs.org](https://nodejs.org/).
+2. **Angular CLI**:
+   - Install globally: `npm install -g @angular/cli`.
+3. **Google Cloud Project**:
+   - Create a project in the [Google Cloud Console](https://console.cloud.google.com/).
+   - Enable the **Google Sheets API** under **APIs & Services > Library**.
+   - Create an **OAuth 2.0 Client ID** (Web application) under **APIs & Services > Credentials**:
+     - Add `http://localhost:4200` as an **Authorized redirect URI**.
+     - Download the credentials JSON and note the **Client ID**.
+   - Configure the **OAuth consent screen**:
+     - Add the scope `https://www.googleapis.com/auth/spreadsheets`.
+     - Add your Google account email as a test user if in "Testing" mode.
+4. **Google Sheet**:
+   - Create a Google Sheet and note its **Spreadsheet ID** (from the URL: `https://docs.google.com/spreadsheets/d/SPREADSHEET_ID/edit`).
+   - Share the sheet with the Google account used for authentication (Editor access).
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Installation
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+1. **Clone the Repository**:
+   ```bash
+   git clone <repository-url>
+   cd google-sheets-angular-app
