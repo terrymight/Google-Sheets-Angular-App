@@ -11,6 +11,10 @@
 npm-debug.log
 yarn-error.log
 
+# environments
+/src/environments/*
+!/src/environments/.gitkeep
+
 # IDEs and editors
 .idea/
 .project
