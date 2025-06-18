@@ -1,0 +1,22 @@
+<div>
+  <h2>Google Sheets Data</h2>
+  <div *ngIf="error" class="error">{{ error }}</div>
+  <div *ngIf="isSignedIn$ | async; else signInPrompt">
+    <button (click)="signOut()">Sign Out</button>
+    <div>
+      <h3>Add New Row</h3>
+      <input [(ngModel)]="newRow[0]" placeholder="Column A" />
+      <input [(ngModel)]="newRow[1]" placeholder="Column B" />
+      <button (click)="addRow()">Add Row</button>
+    </div>
+    <h3>Sheet Data</h3>
+    <table>
+      <tr *ngFor="let row of data$ | async">
+        <td *ngFor="let cell of row">{{ cell }}</td>
+      </tr>
+    </table>
+  </div>
+  <ng-template #signInPrompt>
+    <button (click)="signIn()">Sign In with Google</button>
+  </ng-template>
+</div>

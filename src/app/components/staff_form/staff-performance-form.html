@@ -1,0 +1,159 @@
+<div class="form-container">
+  <h2>Staff Performance Review Form</h2>
+
+  <!-- Loading Indicator -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Submitting...</p>
+  </div>
+
+  <!-- Submission Message -->
+  <div *ngIf="submissionMessage" class="submission-message"
+       [ngClass]="{'success': submissionMessage.includes('successfully'), 'error': submissionMessage.includes('Error')}">
+    {{ submissionMessage }}
+  </div>
+
+  <form [formGroup]="staffForm" (ngSubmit)="onSubmit()">
+
+    <!-- Step 1: Personal and Performance Details -->
+    <div *ngIf="currentStep === 1" class="form-step">
+      <h3>Step 1: Personal and Performance Details</h3>
+      <div class="step-content-grid">
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" formControlName="fullName" placeholder="Enter full name">
+          <div *ngIf="staffForm.get('fullName')?.invalid && staffForm.get('fullName')?.touched" class="error-message">
+            Full Name is required.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="jobTitle">Job Title</label>
+          <input type="text" id="jobTitle" formControlName="jobTitle" placeholder="Enter job title">
+          <div *ngIf="staffForm.get('jobTitle')?.invalid && staffForm.get('jobTitle')?.touched" class="error-message">
+            Job Title is required.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="departmentUnit">Department/Unit(s)</label>
+          <select id="departmentUnit" formControlName="departmentUnit">
+            <option value="" disabled selected>Select Department/Unit</option>
+            <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+          </select>
+          <div *ngIf="staffForm.get('departmentUnit')?.invalid && staffForm.get('departmentUnit')?.touched" class="error-message">
+            Department/Unit is required.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="nameOfSupervisor">Name of Supervisor</label>
+          <input type="text" id="nameOfSupervisor" formControlName="nameOfSupervisor" placeholder="Enter supervisor's name">
+          <div *ngIf="staffForm.get('nameOfSupervisor')?.invalid && staffForm.get('nameOfSupervisor')?.touched" class="error-message">
+            Supervisor's Name is required.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="performancePeriod">Performance Period</label>
+          <select id="performancePeriod" formControlName="performancePeriod">
+            <option value="" disabled selected>Select Performance Period</option>
+            <option *ngFor="let period of performancePeriods" [value]="period">{{ period }}</option>
+          </select>
+          <div *ngIf="staffForm.get('performancePeriod')?.invalid && staffForm.get('performancePeriod')?.touched" class="error-message">
+            Performance Period is required.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="groupPastor">Group Pastor</label>
+          <select id="groupPastor" formControlName="groupPastor">
+            <option value="" disabled selected>Select Group Pastor</option>
+            <option *ngFor="let gPastor of groupPastors" [value]="gPastor">{{ gPastor }}</option>
+          </select>
+          <div *ngIf="staffForm.get('groupPastor')?.invalid && staffForm.get('groupPastor')?.touched" class="error-message">
+            Group Pastor is required.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="churchPastorCoordinator">Church Pastor/Coordinator</label>
+          <select id="churchPastorCoordinator" formControlName="churchPastorCoordinator">
+            <option value="" disabled selected>Select Pastor/Coordinator</option>
+            <option *ngFor="let pastor of churchPastorsCoordinators" [value]="pastor">{{ pastor }}</option>
+          </select>
+          <div *ngIf="staffForm.get('churchPastorCoordinator')?.invalid && staffForm.get('churchPastorCoordinator')?.touched" class="error-message">
+            Church Pastor/Coordinator is required.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Key Result Areas (Dynamic) -->
+    <div *ngIf="currentStep === 2" class="form-step">
+      <h3>Step 2: SECTION B: KEY RESULT AREA</h3>
+      <p class="section-description">Kindly add more rows if required.</p>
+
+      <div formArrayName="keyResultAreas" class="dynamic-section">
+        <div *ngFor="let kraGroup of keyResultAreas.controls; let i = index" [formGroupName]="i" class="dynamic-item">
+          <h4>Key Result Area #{{ i + 1 }}</h4>
+          <div class="form-group">
+            <label [for]="'keyResultArea-' + i">KEY RESULT AREAS (With specific targets)</label>
+            <textarea [id]="'keyResultArea-' + i" formControlName="keyResultArea" rows="3" placeholder="Describe the key result area and specific targets"></textarea>
+            <div *ngIf="kraGroup.get('keyResultArea')?.invalid && kraGroup.get('keyResultArea')?.touched" class="error-message">
+              Key Result Area is required.
+            </div>
+          </div>
+          <div class="form-group">
+            <label [for]="'specificAchievements-' + i">SPECIFIC ACHIEVEMENTS AGAINST SPECIFIC TARGETS</label>
+            <textarea [id]="'specificAchievements-' + i" formControlName="specificAchievements" rows="3" placeholder="Detail your achievements against the targets"></textarea>
+            <div *ngIf="kraGroup.get('specificAchievements')?.invalid && kraGroup.get('specificAchievements')?.touched" class="error-message">
+              Specific Achievements are required.
+            </div>
+          </div>
+          <div class="form-group">
+            <label [for]="'specialComment-' + i">SPECIAL COMMENT/CONCERN/POINT TO NOTE</label>
+            <textarea [id]="'specialComment-' + i" formControlName="specialComment" rows="3" placeholder="Any comments, concerns, or factors that affected your result"></textarea>
+          </div>
+          <button type="button" class="remove-button" (click)="removeKeyResultArea(i)" *ngIf="keyResultAreas.length > 1">Remove</button>
+        </div>
+      </div>
+      <button type="button" class="add-button" (click)="addKeyResultArea()">Add Another Key Result Area</button>
+    </div>
+
+    <!-- Step 3: Ideas and Innovations (Dynamic) -->
+    <div *ngIf="currentStep === 3" class="form-step">
+      <h3>Step 3: SECTION C: IDEA AND INNOVATIONS within the period</h3>
+      <p class="section-description">Kindly add more rows if required.</p>
+
+      <div formArrayName="ideasAndInnovations" class="dynamic-section">
+        <div *ngFor="let ideaGroup of ideasAndInnovations.controls; let i = index" [formGroupName]="i" class="dynamic-item">
+          <h4>Idea/Innovation #{{ i + 1 }}</h4>
+          <div class="form-group">
+            <label [for]="'idea-' + i">IDEA(s)</label>
+            <textarea [id]="'idea-' + i" formControlName="idea" rows="3" placeholder="Describe your idea or innovation"></textarea>
+            <div *ngIf="ideaGroup.get('idea')?.invalid && ideaGroup.get('idea')?.touched" class="error-message">
+              Idea is required.
+            </div>
+          </div>
+          <div class="form-group">
+            <label [for]="'impactMade-' + i">IMPACT MADE</label>
+            <textarea [id]="'impactMade-' + i" formControlName="impactMade" rows="3" placeholder="Explain the impact your idea or innovation made"></textarea>
+            <div *ngIf="ideaGroup.get('impactMade')?.invalid && ideaGroup.get('impactMade')?.touched" class="error-message">
+              Impact Made is required.
+            </div>
+          </div>
+          <button type="button" class="remove-button" (click)="removeIdeaInnovation(i)" *ngIf="ideasAndInnovations.length > 1">Remove</button>
+        </div>
+      </div>
+      <button type="button" class="add-button" (click)="addIdeaInnovation()">Add Another Idea/Innovation</button>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="form-navigation">
+      <button type="button" class="prev-button" (click)="prevStep()" *ngIf="currentStep > 1" [disabled]="isLoading">Previous</button>
+      <button type="button" class="next-button" (click)="nextStep()" *ngIf="currentStep < totalSteps" [disabled]="isLoading">Next</button>
+      <button type="submit" class="submit-button" *ngIf="currentStep === totalSteps" [disabled]="staffForm.invalid || isLoading">Submit Review</button>
+    </div>
+  </form>
+</div>
