@@ -321,17 +321,28 @@ export class StaffPerformanceForm  implements OnInit, OnDestroy {
           return EMPTY; // Important: Return EMPTY to complete the stream after error
         }),
         finalize(() => {
-          console.log('7. Finalize: Observable sequence completed or errored.');
           this.isLoading = false;
-          this.submitSubscription = undefined;
+          // this.submitSubscription = undefined;
+          console.log('Catch by Tagejoe!')
+          console.log('7. Finalize: Observable sequence completed or errored.');
         })
       ).subscribe({
         next: (data) => {
           this.isLoading = false;
           this.submitSubscription = undefined;
         },
-        error: (err) => console.error('9. Subscribe Error: Uncaught error in subscription:', err), // Should only be hit if catchError re-throws
-        complete: () => console.log('10. Subscribe Complete: Observable stream finished.') // Should always be hit if the stream terminates
+        error: (err) => {
+          this.isLoading = false;
+          // this.submitSubscription = undefined;
+          console.error('9. Subscribe Error: Uncaught error in subscription:', err)
+        }, // Should only be hit if catchError re-throws
+        complete: () => {
+          this.isLoading = false;
+          // this.submitSubscription = undefined;
+          this.currentStep = 1;
+          this.setSubmissionMessage('Email not registered contact admin!', 5000);
+          console.log('10. Subscribe Complete: Observable stream finished.')
+        } // Should always be hit if the stream terminates
       });
     } else {
       this.markCurrentStepControlsAsTouched();
