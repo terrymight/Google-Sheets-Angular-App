@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/google-sheets-app",
+    "public": "dist/google-sheets-app/browser",
     "ignore": [
       "firebase.json",
       "**/.*",
